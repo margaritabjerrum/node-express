@@ -1,0 +1,3 @@
+   type ResponseError = {
+     errorMessage: string
+   };
