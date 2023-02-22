@@ -1,7 +1,7 @@
 import {
   object, string, number, array, ObjectSchema,
 } from 'yup';
-import { BikeData } from './types';
+import { BikeData } from '../types';
 
 const bikeDataValidationSchema: ObjectSchema<BikeData> = object({
   brand: string()

@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 import { ValidationError } from 'yup';
 import createId from 'uniqid';
-import { BikeData, BikeModel } from './types';
-import bikes from './bikes-data';
-import bikeDataValidationSchema from './bike-data-validation-schema';
+import { BikeData, BikeModel } from '../types';
+import bikes from '../bikes-data';
+import bikeDataValidationSchema from '../validation-schemas/bike-data-validation-schema';
 
 export const createBike: RequestHandler<
 {},

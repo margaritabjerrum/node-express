@@ -1,6 +1,6 @@
 import { RequestHandler } from 'express';
-import { BikeModel } from './types';
-import bikes from './bikes-data';
+import { BikeModel } from '../types';
+import bikes from '../bikes-data';
 
 export const getBikes: RequestHandler<
 {}, // Paramentrai

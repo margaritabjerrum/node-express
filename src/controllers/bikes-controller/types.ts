@@ -14,3 +14,5 @@ export type BikeModel = {
 };
 
 export type BikeData = Omit<BikeModel, 'id'>;
+
+export type PartialBikeData = Partial<BikeData>;

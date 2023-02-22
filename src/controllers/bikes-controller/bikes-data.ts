@@ -218,6 +218,7 @@ const bikes: BikeModel[] = [
     ],
   },
   {
+    id: 'HHnTeXr',
     brand: 'Ducati',
     model: 'Panigale V4S',
     year: 2021,
@@ -233,9 +234,9 @@ const bikes: BikeModel[] = [
       'https://mcn-images.bauersecure.com/wp-images/5089/1440x960/ducati_panigale_v4_s_17.jpg?mode=max&quality=90&scale=down',
       'https://mcn-images.bauersecure.com/wp-images/5089/1440x960/ducati_panigale_v4_s_01.jpg?mode=max&quality=90&scale=down',
     ],
-    id: 'HHnTeXr',
   },
   {
+    id: 'jCCSY1d',
     brand: 'KTM',
     model: 'Superduke R Evo',
     year: 2022,
@@ -251,7 +252,6 @@ const bikes: BikeModel[] = [
       'https://mcn-images.bauersecure.com/wp-images/5119/1440x960/ktm_superduke_evo_03.jpg?mode=max&quality=90&scale=down',
       'https://mcn-images.bauersecure.com/wp-images/5119/1440x960/ktm_superduke_evo_01.jpg?mode=max&quality=90&scale=down',
     ],
-    id: 'jCCSY1d',
   },
 ];
 
