@@ -1,4 +1,4 @@
-type BikeModel = {
+export type BikeModel = {
   id: string,
   brand: string,
   model: string,
@@ -13,4 +13,4 @@ type BikeModel = {
   images: string[]
 };
 
-export default BikeModel;
+export type BikeData = Omit<BikeModel, 'id'>;

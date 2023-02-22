@@ -1,4 +1,4 @@
-import BikeModel from './bike-model';
+import { BikeModel } from './types';
 
 const bikes: BikeModel[] = [
   {

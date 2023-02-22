@@ -1,89 +1,32 @@
 import { RequestHandler } from 'express';
-import {
-  object, string, number, array, ObjectSchema,
-} from 'yup';
-import BikeModel from './bike-model';
+import { ValidationError } from 'yup';
+import createId from 'uniqid';
+import { BikeData, BikeModel } from './types';
 import bikes from './bikes-data';
-
-const bikeDataValidationSchema: ObjectSchema<BikeData> = object({
-  brand: string()
-    .required('Brand is required')
-    .min(2, 'Must be more than 2 symbols')
-    .max(32, 'Must be less than 32 symbols'),
-
-  model: string()
-    .required('Model is required')
-    .min(2, 'Must be more than 2 symbols')
-    .max(32, 'Must be less than 32 symbols'),
-
-  year: number()
-    .required('Year is required')
-    .integer('Year must be integer')
-    .min(1950, 'Year must be more than 1950')
-    .max(2023, 'Year cannot be more than 2023'),
-
-  price: number()
-    .required('price is required')
-    .positive('price must be positive')
-    .test(
-      'isPrice',
-      'icorrect price format',
-      (val) => Number(val.toFixed(2)) === val,
-    ),
-
-  stats:
-    object({
-      engine: string()
-        .required('Engine is required')
-        .min(2, 'Must be more than 2 symbols')
-        .max(32, 'Must be less than 32 symbols'),
-      power: string()
-        .required('Power is required')
-        .min(2, 'Must be more than 2 symbols')
-        .max(32, 'Must be less than 32 symbols'),
-      seatHeight: string()
-        .required('Seat Height is required')
-        .min(2, 'Must be more than 2 symbols')
-        .max(32, 'Must be less than 32 symbols'),
-      weight: string()
-        .required('Weight is required')
-        .min(2, 'Must be more than 2 symbols')
-        .max(32, 'Must be less than 32 symbols'),
-    })
-      .required('Stats is required'),
-
-  images: array()
-    .of(string().required())
-    .required('Is required')
-    .min(1, 'images must have at least one image'),
-}).strict(true);
-
-const isBikeData = (
-  potentialBikeData: PartialBikeData | BikeData,
-): potentialBikeData is BikeData => {
-  try {
-    bikeDataValidationSchema.validateSync(potentialBikeData);
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
-
-type BikeData = Omit<BikeModel, 'id'>;
-type PartialBikeData = PartialRecursive<BikeData>;
+import bikeDataValidationSchema from './bike-data-validation-schema';
 
 export const createBike: RequestHandler<
 {},
 BikeModel | ResponseError,
-PartialBikeData,
+BikeData,
 {}
 > = (req, res) => {
-  const bikeData = req.body;
-  if (!isBikeData(bikeData)) {
-    res.status(400).json({ errorMessage: 'Incorrect data' });
-    return;
+  try {
+    const bikeData = bikeDataValidationSchema.validateSync(req.body, { abortEarly: false });
+    const newBike: BikeModel = { id: createId(), ...bikeData };
+    bikes.push(newBike);
+    res.status(201).json(newBike);
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      const manyErrors = error.errors.length > 1;
+      res.status(400).json({
+        error: manyErrors ? 'Validation errors' : error.errors[0],
+        errors: manyErrors ? error.errors : undefined,
+      });
+    } else if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: 'Request error' });
+    }
   }
-  const newBike = { id: '6', ...bikeData };
-  bikes.push(newBike);
-  res.status(201).json(newBike);
 };

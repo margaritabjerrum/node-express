@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import BikeModel from './bike-model';
+import { BikeModel } from './types';
 import bikes from './bikes-data';
 
 export const getBikes: RequestHandler<
