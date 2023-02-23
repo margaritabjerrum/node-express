@@ -23,5 +23,5 @@ BikeModel | ResponseError,
 
   const [deletedBike] = bikes.splice(foundBikeIndex, 1);
 
-  res.status(200).json(deletedBike);
+  res.status(204).json(deletedBike);
 };
