@@ -1,59 +1,19 @@
-import {
-  object, string, number, array, ObjectSchema,
-} from 'yup';
+import * as yup from 'yup';
 import { BikeData } from '../types';
+import brandSchema from './property-schemas/brand-schema';
+import imagesSchema from './property-schemas/images-schema';
+import modelSchema from './property-schemas/model-schema';
+import priceSchema from './property-schemas/price-schema';
+import statsSchema from './property-schemas/stats-schema';
+import yearSchema from './property-schemas/year-schema';
 
-const bikeDataValidationSchema: ObjectSchema<BikeData> = object({
-  brand: string()
-    .required('Brand is required')
-    .min(2, 'Must be more than 2 symbols')
-    .max(32, 'Must be less than 32 symbols'),
-
-  model: string()
-    .required('Model is required')
-    .min(2, 'Must be more than 2 symbols')
-    .max(32, 'Must be less than 32 symbols'),
-
-  year: number()
-    .required('Year is required')
-    .integer('Year must be integer')
-    .min(1950, 'Year must be more than 1950')
-    .max(2023, 'Year cannot be more than 2023'),
-
-  price: number()
-    .required('price is required')
-    .positive('price must be positive')
-    .test(
-      'isPrice',
-      'icorrect price format',
-      (val) => Number(val.toFixed(2)) === val,
-    ),
-
-  stats:
-    object({
-      engine: string()
-        .required('Engine is required')
-        .min(2, 'Must be more than 2 symbols')
-        .max(32, 'Must be less than 32 symbols'),
-      power: string()
-        .required('Power is required')
-        .min(2, 'Must be more than 2 symbols')
-        .max(32, 'Must be less than 32 symbols'),
-      seatHeight: string()
-        .required('Seat Height is required')
-        .min(2, 'Must be more than 2 symbols')
-        .max(32, 'Must be less than 32 symbols'),
-      weight: string()
-        .required('Weight is required')
-        .min(2, 'Must be more than 2 symbols')
-        .max(32, 'Must be less than 32 symbols'),
-    })
-      .required('Stats is required'),
-
-  images: array()
-    .of(string().required())
-    .required('Is required')
-    .min(1, 'images must have at least one image'),
+const bikeDataValidationSchema: yup.ObjectSchema<BikeData> = yup.object({
+  brand: brandSchema.required('Brand is required'),
+  model: modelSchema.required('Model is required'),
+  year: yearSchema.required('Year is required'),
+  price: priceSchema(true),
+  stats: statsSchema.required('Stats is required'),
+  images: imagesSchema.required('Is required'),
 }).strict(true);
 
 export default bikeDataValidationSchema;
