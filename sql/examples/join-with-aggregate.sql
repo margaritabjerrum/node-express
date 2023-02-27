@@ -1,4 +1,4 @@
-SELECT h.id, h.title, l.country, l.city, h.price, h.rating, JSON_ARRAYAGG(i.src)
+SELECT h.id, h.title, JSON_OBJECT('country', l.country, 'city', l.city) as location, l.city, h.price, h.rating, JSON_ARRAYAGG(i.src)
 FROM images as i
 LEFT JOIN houses as h
 ON i.houseId = h.id
