@@ -1,15 +1,15 @@
-import mysql from 'mysql';
+import mysql from 'mysql2';
 import config from '../config';
 
-const connection = mysql.createConnection(config.db);
+const MySql = mysql.createConnection(config.db);
 
 export const connectMySql = (callback: VoidFunction) => {
-  connection.connect((conectionErr) => {
+  MySql.connect((conectionErr) => {
     if (conectionErr) throw new Error(conectionErr.message);
   });
 
   callback();
-  connection.end();
+  MySql.end();
 };
 
-export default connection;
+export default MySql;

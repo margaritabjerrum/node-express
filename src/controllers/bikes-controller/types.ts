@@ -1,5 +1,7 @@
-export type BikeModel = {
-  id: string,
+import { RowDataPacket } from 'mysql2';
+
+export interface BikeModel extends RowDataPacket {
+  id: number,
   brand: string,
   model: string,
   year: number,
@@ -11,7 +13,7 @@ export type BikeModel = {
     weight: string,
   },
   images: string[]
-};
+}
 
 export type BikeData = Omit<BikeModel, 'id'>;
 
