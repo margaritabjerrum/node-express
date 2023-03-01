@@ -1,6 +1,6 @@
 import { RowDataPacket } from 'mysql2';
 
-export interface BikeModel extends RowDataPacket {
+type PrivateBikeModel = {
   id: number,
   brand: string,
   model: string,
@@ -13,8 +13,10 @@ export interface BikeModel extends RowDataPacket {
     weight: string,
   },
   images: string[]
-}
+};
 
-export type BikeData = Omit<BikeModel, 'id'>;
+export type BikeModel = PrivateBikeModel & RowDataPacket;
+
+export type BikeData = Omit<PrivateBikeModel, 'id'>;
 
 export type PartialBikeData = Partial<BikeData>;
