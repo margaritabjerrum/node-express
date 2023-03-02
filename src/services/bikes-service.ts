@@ -185,9 +185,6 @@ const updateBike = async (id: string, bikeData: PartialBikeData): Promise<BikeMo
   const [queryResultsArr] = await mySqlConnection.query<BikeModel[]>(preparedSql, bindings);
   const updatedBike = queryResultsArr.at(-1) as BikeModel;
 
-  console.log(preparedSql);
-  console.log(bindings);
-
   await mySqlConnection.end();
 
   return updatedBike;
@@ -197,10 +194,12 @@ const deleteBike = async (id: string): Promise<void> => {
   const mySqlConnection = await mysql.createConnection(config.db);
 
   const preparedSql = `
-    DELETE FROM images WHERE bikeId = ?;
-    DELETE from bikes WHERE id = ?;
-    `;
-  const preparedSqlData = [id, id];
+    SET @deletedBikeStatsId = (select statsId from bikes where id = ?);
+    DELETE FROM images WHERE images.bikeId = ?;  
+    DELETE FROM bikes WHERE id = ?;  
+    DELETE FROM stats WHERE stats.id = @deletedBikeStatsId;
+  `;
+  const preparedSqlData = [id, id, id];
 
   await mySqlConnection.query<BikeModel[]>(preparedSql, preparedSqlData);
 
