@@ -1,25 +1,19 @@
 import { RequestHandler } from 'express';
 import { ValidationError } from 'yup';
-import { BikeModel } from '../types';
-import bikes from '../bikes-data';
+import { BikeModel, PartialBikeData } from '../types';
 import partialBikeDataValidationSchema from '../validation-schemas/partial-bike-data-validation-schema';
+import BikeService from '../../../services/bikes-service';
 
 export const updateBike: RequestHandler<
 { id: string | undefined },
 BikeModel | ResponseError,
-{},
+PartialBikeData,
 {}
-> = (req, res) => {
+> = async (req, res) => {
   const { id } = req.params;
 
   if (id === undefined) {
     res.status(400).json({ error: 'server set up error' });
-    return;
-  }
-
-  const foundBikeIndex = bikes.findIndex((bike) => bike.id === id);
-  if (foundBikeIndex === -1) {
-    res.status(400).json({ error: `bike was not found with id: ${id}` });
     return;
   }
 
@@ -29,14 +23,7 @@ BikeModel | ResponseError,
       { abortEarly: false },
     );
 
-    const foundBike = bikes[foundBikeIndex];
-
-    const updatedBike = {
-      ...foundBike,
-      ...partialBikeData,
-    };
-
-    bikes.splice(foundBikeIndex, 1, updatedBike);
+    const updatedBike = await BikeService.updateBike(id, partialBikeData);
 
     res.status(200).json(updatedBike);
   } catch (error) {

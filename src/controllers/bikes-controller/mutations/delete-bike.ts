@@ -1,13 +1,13 @@
 import { RequestHandler } from 'express';
 import { BikeModel } from '../types';
-import bikes from '../bikes-data';
+import BikeService from '../../../services/bikes-service';
 
 export const deleteBike: RequestHandler<
 { id: string | undefined },
 BikeModel | ResponseError,
 {},
 {}
-> = (req, res) => {
+> = async (req, res) => {
   const { id } = req.params;
 
   if (id === undefined) {
@@ -15,13 +15,16 @@ BikeModel | ResponseError,
     return;
   }
 
-  const foundBikeIndex = bikes.findIndex((bike) => bike.id === id);
-  if (foundBikeIndex === -1) {
-    res.status(400).json({ error: `bike was not found with id: ${id}` });
-    return;
+  try {
+    const bike = await BikeService.getBike(id);
+    await BikeService.deleteBike(id);
+
+    res.status(200).json(bike);
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(400).json({ error: error.message });
+    } else {
+      res.status(400).json({ error: 'Request error' });
+    }
   }
-
-  const [deletedBike] = bikes.splice(foundBikeIndex, 1);
-
-  res.status(204).json(deletedBike);
 };
