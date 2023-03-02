@@ -1,13 +1,15 @@
 import mysql from 'mysql2/promise';
 import config from '../config';
-import { BikeModel } from '../controllers/bikes-controller/types';
+import { BikeData, BikeModel } from '../controllers/bikes-controller/types';
 
-type BikesQuerySettings = undefined | {
-  bikeId: string
-};
-
-type BikesQueryResult<T extends BikesQuerySettings> =
-  T extends undefined ? BikeModel[] : BikeModel;
+type CreateBikeQueryResult =
+  [
+    mysql.ResultSetHeader,
+    mysql.ResultSetHeader,
+    mysql.ResultSetHeader,
+    mysql.ResultSetHeader,
+    BikeModel[],
+  ];
 
 const BIKES_QUERY_SQL_SELECT = `
   SELECT 
@@ -31,55 +33,81 @@ const BIKES_QUERY_SQL_SELECT = `
 const BIKES_QUERY_SQL_GROUP = 'GROUP BY b.id;';
 const BIKES_QUERY_SQL_WHERE_ID = 'WHERE b.id = ?';
 
-const bikesQuery = async <T extends BikesQuerySettings = undefined>(
-  settings?: T,
-) => {
-  const mySqlConnection = await mysql.createConnection(config.db);
-  let result: BikeModel | BikeModel[];
-
-  if (settings === undefined) {
-    const [bikes] = await mySqlConnection.query<BikeModel[]>(
-      [BIKES_QUERY_SQL_SELECT, BIKES_QUERY_SQL_GROUP].join('\n'),
-    );
-
-    result = bikes;
-  } else {
-    const preparedSql = [
-      BIKES_QUERY_SQL_SELECT,
-      BIKES_QUERY_SQL_WHERE_ID,
-      BIKES_QUERY_SQL_GROUP,
-    ].join('\n');
-    const preparedSqlData = [settings.bikeId];
-
-    const [bikes] = await mySqlConnection.query<BikeModel[]>(preparedSql, preparedSqlData);
-
-    if (bikes.length === 0) {
-      throw new Error(`Bike with id <${settings.bikeId}> was not found`);
-    }
-    const [bike] = bikes;
-
-    result = bike;
-  }
-  await mySqlConnection.end();
-
-  return result as BikesQueryResult<T>;
-};
-
 const getBikes = async (): Promise<BikeModel[]> => {
-  const bikes = await bikesQuery();
+  const mySqlConnection = await mysql.createConnection(config.db);
+
+  const sql = [BIKES_QUERY_SQL_SELECT, BIKES_QUERY_SQL_GROUP].join('\n');
+  const [bikes] = await mySqlConnection.query<BikeModel[]>(sql);
+
+  mySqlConnection.end();
 
   return bikes;
 };
 
 const getBike = async (id: string): Promise<BikeModel> => {
-  const bike = await bikesQuery({ bikeId: id });
+  const mySqlConnection = await mysql.createConnection(config.db);
 
-  return bike;
+  const preparedSql = [
+    BIKES_QUERY_SQL_SELECT,
+    BIKES_QUERY_SQL_WHERE_ID,
+    BIKES_QUERY_SQL_GROUP,
+  ].join('\n');
+  const preparedSqlData = [id];
+
+  const [bikes] = await mySqlConnection.query<BikeModel[]>(preparedSql, preparedSqlData);
+
+  mySqlConnection.end();
+
+  if (bikes.length === 0) {
+    throw new Error(`Bike with id <${id}> was not found`);
+  }
+  return bikes[0];
+};
+
+const createBike = async (bikeData: BikeData): Promise<BikeModel> => {
+  const mySqlConnection = await mysql.createConnection(config.db);
+
+  const preparedSql = `
+    INSERT INTO stats (engine, power, seat_height, weight) VALUES 
+    (?, ?, ?, ?);
+  
+    INSERT INTO bikes (brand, model, price, year, statsId) VALUES
+    (?, ?, ?, ?, LAST_INSERT_ID());
+
+    SET @bikeId = LAST_INSERT_ID();
+  
+    INSERT INTO images (src, bikeId) VALUES
+    ${bikeData.images.map(() => '(?, @bikeId)').join(',\n')};
+
+    ${BIKES_QUERY_SQL_SELECT}
+    WHERE b.id = @bikeId
+    ${BIKES_QUERY_SQL_GROUP}
+  `;
+
+  const preparedSqlData = [
+    bikeData.stats.engine,
+    bikeData.stats.power,
+    bikeData.stats.seatHeight,
+    bikeData.stats.weight,
+    bikeData.brand,
+    bikeData.model,
+    bikeData.price,
+    bikeData.year,
+    ...bikeData.images,
+  ];
+
+  const [queryResultsArr] = await mySqlConnection.query(preparedSql, preparedSqlData);
+  const [createdBike] = (queryResultsArr as CreateBikeQueryResult)[4];
+
+  await mySqlConnection.end();
+
+  return createdBike;
 };
 
 const BikeService = {
   getBike,
   getBikes,
+  createBike,
 };
 
 export default BikeService;
