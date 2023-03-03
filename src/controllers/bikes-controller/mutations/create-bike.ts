@@ -1,12 +1,12 @@
 import { RequestHandler } from 'express';
 import { ValidationError } from 'yup';
-import { BikeData, BikeModel } from '../types';
+import { BikeData, BikeViewModel } from '../types';
 import bikeDataValidationSchema from '../validation-schemas/bike-data-validation-schema';
-import BikeService from '../../../services/bikes-service';
+import BikeService from '../model';
 
 export const createBike: RequestHandler<
 {},
-BikeModel | ResponseError,
+BikeViewModel | ResponseError,
 BikeData,
 {}
 > = async (req, res) => {

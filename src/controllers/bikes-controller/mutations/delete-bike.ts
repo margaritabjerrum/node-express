@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express';
-import { BikeModel } from '../types';
-import BikeService from '../../../services/bikes-service';
+import { BikeViewModel } from '../types';
+import BikeService from '../model';
 
 export const deleteBike: RequestHandler<
 { id: string | undefined },
-BikeModel | ResponseError,
+BikeViewModel | ResponseError,
 {},
 {}
 > = async (req, res) => {

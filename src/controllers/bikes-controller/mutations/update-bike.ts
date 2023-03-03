@@ -1,12 +1,12 @@
 import { RequestHandler } from 'express';
 import { ValidationError } from 'yup';
-import { BikeModel, PartialBikeData } from '../types';
+import { BikeViewModel, PartialBikeData } from '../types';
 import partialBikeDataValidationSchema from '../validation-schemas/partial-bike-data-validation-schema';
-import BikeService from '../../../services/bikes-service';
+import BikeService from '../model';
 
 export const updateBike: RequestHandler<
 { id: string | undefined },
-BikeModel | ResponseError,
+BikeViewModel | ResponseError,
 PartialBikeData,
 {}
 > = async (req, res) => {
