@@ -1,12 +1,12 @@
 import { RequestHandler } from 'express';
-import { ValidationError } from 'yup';
+import ErrorService from '../../../services/error-service';
 import { BikeData, BikeViewModel } from '../types';
 import bikeDataValidationSchema from '../validation-schemas/bike-data-validation-schema';
-import BikeService from '../model';
+import BikeModel from '../model';
 
 export const createBike: RequestHandler<
 {},
-BikeViewModel | ResponseError,
+BikeViewModel | ErrorResponse,
 BikeData,
 {}
 > = async (req, res) => {
@@ -14,20 +14,11 @@ BikeData,
     const bikeData: BikeData = bikeDataValidationSchema
       .validateSync(req.body, { abortEarly: false });
 
-    const createdBike = await BikeService.createBike(bikeData);
+    const createdBike = await BikeModel.createBike(bikeData);
 
     res.status(201).json(createdBike);
-  } catch (error) {
-    if (error instanceof ValidationError) {
-      const manyErrors = error.errors.length > 1;
-      res.status(400).json({
-        error: manyErrors ? 'Validation errors' : error.errors[0],
-        errors: manyErrors ? error.errors : undefined,
-      });
-    } else if (error instanceof Error) {
-      res.status(400).json({ error: error.message });
-    } else {
-      res.status(400).json({ error: 'Request error' });
-    }
+  } catch (err) {
+    const [status, errorResponse] = ErrorService.handleError(err);
+    res.status(status).json(errorResponse);
   }
 };

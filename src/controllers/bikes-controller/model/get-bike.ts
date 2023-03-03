@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise';
 import config from '../../../config';
+import { NotFoundError } from '../../../services/error-service';
 import { BikeViewModel } from '../types';
 import SQL from './sql';
 
@@ -18,8 +19,7 @@ export const getBike = async (id: string): Promise<BikeViewModel> => {
 
   mySqlConnection.end();
 
-  if (bikes.length === 0) {
-    throw new Error(`Bike with id <${id}> was not found`);
-  }
+  if (bikes.length === 0) throw new NotFoundError(`Bike with id <${id}> was not found`);
+
   return bikes[0];
 };

@@ -1,30 +1,24 @@
 import { RequestHandler } from 'express';
+import ErrorService, { ServerSetupError } from '../../../services/error-service';
 import { BikeViewModel } from '../types';
-import BikeService from '../model';
+import BikeModel from '../model';
 
 export const deleteBike: RequestHandler<
 { id: string | undefined },
-BikeViewModel | ResponseError,
+BikeViewModel | ErrorResponse,
 {},
 {}
 > = async (req, res) => {
   const { id } = req.params;
 
-  if (id === undefined) {
-    res.status(400).json({ error: 'server set up error' });
-    return;
-  }
-
   try {
-    const bike = await BikeService.getBike(id);
-    await BikeService.deleteBike(id);
+    if (id === undefined) throw new ServerSetupError();
+    const bike = await BikeModel.getBike(id);
+    await BikeModel.deleteBike(id);
 
     res.status(200).json(bike);
-  } catch (error) {
-    if (error instanceof Error) {
-      res.status(400).json({ error: error.message });
-    } else {
-      res.status(400).json({ error: 'Request error' });
-    }
+  } catch (err) {
+    const [status, errorResponse] = ErrorService.handleError(err);
+    res.status(status).json(errorResponse);
   }
 };

@@ -4,7 +4,7 @@ import { createBike } from './create-bike';
 import { deleteBike } from './delete-bike';
 import { updateBike } from './update-bike';
 
-const BikeService = {
+const BikeModel = {
   getBike,
   getBikes,
   createBike,
@@ -12,4 +12,4 @@ const BikeService = {
   updateBike,
 };
 
-export default BikeService;
+export default BikeModel;
