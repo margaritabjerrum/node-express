@@ -10,16 +10,23 @@ const {
   DB_USER,
   DB_PASSWORD,
   DB_PORT,
+  JWT_TOKEN_KEY,
+  BCRYPT_ROUNDS,
 } = process.env;
 
 if (
-  SERVER_PORT === undefined
-  || SERVER_DOMAIN === undefined
-  || DB_HOST === undefined
-  || DB_NAME === undefined
-  || DB_USER === undefined
-  || DB_PASSWORD === undefined
-  || DB_PORT === undefined
+  !SERVER_PORT
+  || !SERVER_DOMAIN
+
+  || !DB_HOST
+  || !DB_NAME
+  || !DB_USER
+  || !DB_PASSWORD
+  || !DB_PORT
+
+  || !JWT_TOKEN_KEY
+
+  || !BCRYPT_ROUNDS
 
 ) {
   throw new Error("Please define constants in '.env' file");
@@ -37,6 +44,10 @@ const config = {
     password: DB_PASSWORD,
     port: Number(DB_PORT),
     multipleStatements: true,
+  },
+  secret: {
+    jwtTokenKey: JWT_TOKEN_KEY,
+    bcryptRounds: Number(BCRYPT_ROUNDS),
   },
 };
 
