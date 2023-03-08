@@ -1,5 +1,5 @@
 import mysql, { RowDataPacket } from 'mysql2/promise';
-import config from '../../config';
+import config from 'config';
 
 export const emailAvailable = async (email: string): Promise<boolean> => {
   const mySqlConnection = await mysql.createConnection(config.db);

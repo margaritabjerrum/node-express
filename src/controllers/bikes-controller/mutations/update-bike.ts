@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import ErrorService, { ServerSetupError } from '../../../services/error-service';
+import ErrorService, { ServerSetupError } from 'services/error-service';
 import { BikeViewModel, PartialBikeData } from '../types';
 import partialBikeDataValidationSchema from '../validation-schemas/partial-bike-data-validation-schema';
 import BikeModel from '../model';

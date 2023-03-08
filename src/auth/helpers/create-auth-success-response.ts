@@ -1,5 +1,5 @@
+import TokenService from 'services/token-service';
 import { AuthSuccessResponse, UserViewModel, UserEntityRow } from '../types';
-import TokenService from '../../services/token-service';
 
 const createAuthSuccessResponse = (user: UserEntityRow):AuthSuccessResponse => {
   const token = TokenService.create({ email: user.email, role: user.role });

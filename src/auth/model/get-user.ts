@@ -1,6 +1,6 @@
 import mysql from 'mysql2/promise';
-import config from '../../config';
-import { NotFoundError } from '../../services/error-service';
+import config from 'config';
+import { NotFoundError } from 'services/error-service';
 import { UserEntityRow } from '../types';
 import SQL from './sql';
 

@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import ErrorService from '../services/error-service';
+import ErrorService from 'services/error-service';
 import UserModel from './model';
 import { AuthSuccessResponse, RegistrationData } from './types';
 import registrationDataValidationSchema from './validation-schemas/registration-data-validation-schema';

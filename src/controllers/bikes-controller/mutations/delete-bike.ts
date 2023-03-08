@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import ErrorService, { ServerSetupError } from '../../../services/error-service';
+import ErrorService, { ServerSetupError } from 'services/error-service';
 import { BikeViewModel } from '../types';
 import BikeModel from '../model';
 

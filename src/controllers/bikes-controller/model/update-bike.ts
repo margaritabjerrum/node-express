@@ -1,7 +1,7 @@
 import mysql from 'mysql2/promise';
-import config from '../../../config';
+import config from 'config';
+import { colonObjectQueryFormat } from 'services/my-sql';
 import { BikeViewModel, PartialBikeData } from '../types';
-import { colonObjectQueryFormat } from '../../../services/my-sql';
 import SQL from './sql';
 
 type PrepareSqlResult = [string, Record<string, string>];

@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import config from '../../../config';
+import config from 'config';
 import { BikeViewModel, BikeData } from '../types';
 import SQL from './sql';
 

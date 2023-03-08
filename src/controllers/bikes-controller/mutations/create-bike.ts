@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import ErrorService from '../../../services/error-service';
+import ErrorService from 'services/error-service';
 import { BikeData, BikeViewModel } from '../types';
 import bikeDataValidationSchema from '../validation-schemas/bike-data-validation-schema';
 import BikeModel from '../model';
