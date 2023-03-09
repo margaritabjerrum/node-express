@@ -13,12 +13,19 @@ type PrivateBikeViewModel = {
     weight: string,
   },
   images: string[],
-  ownerId: number,
+  owner: {
+    id: number,
+    name: string,
+    surname: string,
+    email: string,
+  }
 };
 
 export type BikeViewModel = PrivateBikeViewModel & RowDataPacket;
 
-export type BikeData = Omit<PrivateBikeViewModel, 'id'>;
+export type BikeData = Omit<PrivateBikeViewModel, 'id' | 'owner'> & {
+  ownerId: number,
+};
 
 export type BikeBody = Omit<BikeData, 'ownerId'>;
 
