@@ -1,10 +1,8 @@
 import { RowDataPacket } from 'mysql2';
 
-export type RegistrationData = {
-  email: string,
-  firstname: string,
-  lastname: string,
-  password: string,
+export type RegistrationData = Omit<UserEntity, 'id' | 'role'>;
+
+export type RegistrationBody = RegistrationData & {
   passwordConfirmation: string,
 };
 

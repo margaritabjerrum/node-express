@@ -1,22 +1,15 @@
 import mysql from 'mysql2/promise';
 import config from 'config';
 import BcryptService from 'services/bcrypt-service';
-import { UserEntityRow } from '../types';
+import { RegistrationData, UserEntityRow } from '../types';
 import SQL from './sql';
-
-type UserData = {
-  email: string,
-  password: string,
-  firstname: string,
-  lastname:string,
-};
 
 export const createUser = async ({
   email,
   password,
   firstname,
   lastname,
-}: UserData): Promise<UserEntityRow> => {
+}: RegistrationData): Promise<UserEntityRow> => {
   const mySqlConnection = await mysql.createConnection(config.db);
 
   const preparedSql = `

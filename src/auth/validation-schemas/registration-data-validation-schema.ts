@@ -1,7 +1,7 @@
 import * as yup from 'yup';
-import { RegistrationData } from '../types';
+import { RegistrationBody } from '../types';
 
-const registrationDataValidationSchema: yup.ObjectSchema<RegistrationData> = yup.object({
+const registrationDataValidationSchema: yup.ObjectSchema<RegistrationBody> = yup.object({
   email: yup.string()
     .email('Incorect email format')
     .required('Email is required'),
