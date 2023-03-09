@@ -1,5 +1,6 @@
 import { RequestHandler } from 'express';
-import ErrorService, { ServerSetupError } from 'services/error-service';
+import ErrorService, { ServerSetupError, ForbiddenError } from 'services/error-service';
+import UserModel from 'models/user-model';
 import { BikeViewModel, PartialBikeBody } from '../types';
 import partialBikeDataValidationSchema from '../validation-schemas/partial-bike-data-validation-schema';
 import BikeModel from '../model';
@@ -14,10 +15,15 @@ PartialBikeBody,
 
   try {
     if (id === undefined) throw new ServerSetupError();
+    if (req.authData === undefined) throw new ServerSetupError();
     const partialBikeData = partialBikeDataValidationSchema.validateSync(
       req.body,
       { abortEarly: false },
     );
+
+    const user = await UserModel.getUserByEmail(req.authData.email);
+    const bike = await BikeModel.getBike(id);
+    if (user.role !== 'ADMIN' && user.id !== bike.owner.id) throw new ForbiddenError();
 
     const updatedBike = await BikeModel.updateBike(id, partialBikeData);
 
