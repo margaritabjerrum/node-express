@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { PartialBikeData } from '../types';
+import { PartialBikeBody } from '../types';
 import brandSchema from './property-schemas/brand-schema';
 import imagesSchema from './property-schemas/images-schema';
 import modelSchema from './property-schemas/model-schema';
@@ -7,7 +7,7 @@ import priceSchema from './property-schemas/price-schema';
 import statsSchema from './property-schemas/stats-schema';
 import yearSchema from './property-schemas/year-schema';
 
-const partialBikeDataValidationSchema: yup.ObjectSchema<PartialBikeData> = yup.object({
+const partialBikeDataValidationSchema: yup.ObjectSchema<PartialBikeBody> = yup.object({
   brand: brandSchema,
   model: modelSchema,
   year: yearSchema,

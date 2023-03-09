@@ -19,8 +19,8 @@ export const createBike = async (bikeData: BikeData): Promise<BikeViewModel> => 
       INSERT INTO stats (engine, power, seat_height, weight) VALUES 
       (?, ?, ?, ?);
     
-      INSERT INTO bikes (brand, model, price, year, statsId) VALUES
-      (?, ?, ?, ?, LAST_INSERT_ID());
+      INSERT INTO bikes (brand, model, price, year, ownerId, statsId) VALUES
+      (?, ?, ?, ?, ?, LAST_INSERT_ID());
   
       SET @bikeId = LAST_INSERT_ID();
     
@@ -41,6 +41,7 @@ export const createBike = async (bikeData: BikeData): Promise<BikeViewModel> => 
     bikeData.model,
     bikeData.price,
     bikeData.year,
+    bikeData.ownerId,
     ...bikeData.images,
   ];
 

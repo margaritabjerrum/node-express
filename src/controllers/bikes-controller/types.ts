@@ -12,11 +12,14 @@ type PrivateBikeViewModel = {
     seatHeight: string,
     weight: string,
   },
-  images: string[]
+  images: string[],
+  ownerId: number,
 };
 
 export type BikeViewModel = PrivateBikeViewModel & RowDataPacket;
 
 export type BikeData = Omit<PrivateBikeViewModel, 'id'>;
 
-export type PartialBikeData = Partial<BikeData>;
+export type BikeBody = Omit<BikeData, 'ownerId'>;
+
+export type PartialBikeBody = Partial<BikeBody>;
