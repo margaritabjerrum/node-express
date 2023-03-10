@@ -3,5 +3,6 @@ type AuthData = {
 };
 
 type DecodedAuthData = AuthData & {
-  iat?: number,
+  iat: number,
+  exp: number,
 };
